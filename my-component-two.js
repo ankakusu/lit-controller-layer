@@ -1,17 +1,13 @@
 import { LitElement, html } from 'lit-element';
-import './app-user';
+import { userController } from './user/userController';
 
 class MyComponentTwo extends LitElement {
-  static get properties() {
-    return {};
-  }
-
   render() {
     return html`
-      <p>Two</p>
-      <user-controller></user-controller>
+      <h2>Two</h2>
+      <p>User: ${userController.user.firstName}</p>
     `;
   }
 }
 
-customElements.define('my-data-two', MyComponentTwo);
+customElements.define('my-component-two', MyComponentTwo);

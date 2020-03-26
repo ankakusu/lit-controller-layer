@@ -1,30 +1,44 @@
 import { LitElement, html } from 'lit-element';
-import './user-controller';
+import { userController } from './user/userController';
+import { User } from './user/User';
 
 class MyComponentOne extends LitElement {
   static get properties() {
     return {
-      userController: {
-        type: Object,
-        value: [],
-      },
+      user: Object,
     };
   }
 
+  constructor() {
+    super();
+    this.user = new User();
+  }
+
+  saveUser(event) {
+    event.preventDefault();
+    userController.updateUser('User1', this.user);
+  }
+
   updateUser(event) {
-    console.log('update user', event);
+    const {id, value} = event.target;
+    this.user[id] = value;
   }
 
   render() {
     return html`
-      <p>One</p>
-      <div>
-        <label for="userName">Set User Name</label>
-<!--        Somehow the user controller is injected as a dependency and should be a singleton-->
-<!--        <input id="userName" type="text" .value="${this.userController.name}">-->
-      </div>
-      <button @click="${this.updateUser}">Update user name</button>
-      <user-controller id="userController"></user-controller>
+      <h2>One</h2>
+      <form id="userForm" @change=${this.updateUser}>
+        <div>
+          <label for="firstName">First Name</label>
+          <input type="text" id="firstName" name="firstName">
+        </div>
+        <div>
+          <label for="lastName">Last Name</label>
+          <input type="text" id="lastName" name="lastName" @blur="${this.updateUser}">
+        </div>
+        <button @click="${this.saveUser}">Update user name</button>
+        <user-controller id="userController"></user-controller>
+      </form>
    `;
   }
 
