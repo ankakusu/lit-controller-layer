@@ -1,6 +1,7 @@
 import { LitElement, html } from 'lit-element';
 import { userController } from './user/userController';
 import { User } from './user/User';
+import { userService } from './user/UserService';
 
 class MyComponentOne extends LitElement {
   static get properties() {
@@ -11,32 +12,35 @@ class MyComponentOne extends LitElement {
 
   constructor() {
     super();
-    this.user = new User();
-  }
-
-  saveUser(event) {
-    event.preventDefault();
-    userController.updateUser('User1', this.user);
+    this.user = User.new();
+    userService.user.subscribe((user) => this.user = user);
   }
 
   updateUser(event) {
-    const {id, value} = event.target;
-    this.user[id] = value;
+    event.preventDefault();
+
+    userController.updateUser(User.fromJson({
+      firstName: event.target.firstName.value,
+      lastName: event.target.lastName.value,
+    }));
   }
 
   render() {
     return html`
       <h2>One</h2>
-      <form id="userForm" @change=${this.updateUser}>
+      <div>
+        <span>${this.user.firstName}</span> <span>${this.user.lastName}</span>
+      </div>
+      <form id="userForm" @submit="${this.updateUser}">
         <div>
           <label for="firstName">First Name</label>
           <input type="text" id="firstName" name="firstName">
         </div>
         <div>
           <label for="lastName">Last Name</label>
-          <input type="text" id="lastName" name="lastName" @blur="${this.updateUser}">
+          <input type="text" id="lastName" name="lastName">
         </div>
-        <button @click="${this.saveUser}">Update user name</button>
+        <button>Update user name</button>
         <user-controller id="userController"></user-controller>
       </form>
    `;

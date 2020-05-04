@@ -1,30 +1,28 @@
+
 export class User {
-  set firstName(firstName) {
-    if (!firstName) this._firstName = '';
-
-    this._firstName = firstName;
-  }
-  get firstName() {
-    return this._firstName;
+  constructor() {
+    this.firstName = '';
+    this.lastName = '';
   }
 
-  set lastName(lastName) {
-    if (!lastName) this._lastName = '';
-
-    this._lastName = lastName;
-  }
-  get lastName() {
-    return this._lastName;
+  static new() {
+    return UserSerializer.new();
   }
 
-  constructor(user) {
-    if (!user) {
-      this.firstName = '';
-      this.lastName = '';
-      return;
-    }
+  static fromJson(json) {
+    return UserSerializer.fromJson(json);
+  }
+}
 
-    this.firstName = user.firstName;
-    this.lastName = user.lastName;
+class UserSerializer {
+  static new() {
+    return new User();
+  }
+
+  static fromJson(json) {
+    const user = new User();
+    user.firstName = json.firstName;
+    user.lastName = json.lastName;
+    return user;
   }
 }
